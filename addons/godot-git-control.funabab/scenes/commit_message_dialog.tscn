@@ -1,0 +1,47 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+resource_name = "commit_message_dialog"
+script/source = "tool
+extends \"res://addons/godot-git-control.funabab/scripts/git_dialog.gd\"
+
+func _get_ok_btn_text():
+	return Lang.translate(\"prop_btn_text_commit\");
+	pass
+
+func _tr():
+	window_title = Lang.translate(\"prop_window_title_enter_commit_msg\");
+	dialog_text = Lang.translate(\"prop_dialog_text_commit_msg\");
+	pass
+
+func _get_result(custom):
+	return $commit_message/input.text;
+	pass
+
+func _on_show_dialog(args):
+	$commit_message/input.text = \"\";
+	pass
+"
+
+[node name="commit_message_dialog" type="AcceptDialog"]
+margin_right = 549.0
+margin_bottom = 245.0
+popup_exclusive = true
+window_title = "Enter commit message"
+dialog_text = "commit message"
+script = SubResource( 1 )
+
+[node name="commit_message" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 22.0
+margin_right = -8.0
+margin_bottom = -36.0
+
+[node name="input" type="TextEdit" parent="commit_message"]
+margin_right = 533.0
+margin_bottom = 187.0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3

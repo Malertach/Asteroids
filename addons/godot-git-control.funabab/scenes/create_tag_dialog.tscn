@@ -1,0 +1,119 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+resource_name = "create_tag_dialog"
+script/source = "tool
+extends \"res://addons/godot-git-control.funabab/scripts/git_dialog.gd\"
+
+var tag_name_input;
+func _get_ok_btn_text():
+	return Lang.translate(\"prop_btn_text_create_tag\");
+	pass
+
+func _get_custom_btn_text():
+	return Lang.translate(\"prop_btn_text_force_tag\");
+	pass
+
+func _tr():
+	window_title = Lang.translate(\"prop_window_title_create_tag\");
+	$container/tag_name/label.text = Lang.translate(\"prop_label_text_tag_name\");
+	$container/tag_commit/label.text = Lang.translate(\"prop_label_text_commit_ref\");
+	$container/tag_commit/label.text = Lang.translate(\"prop_label_text_tag_commit_msg\");
+	pass
+
+func _get_result(custom):
+	return {
+		tag_name = tag_name_input.text,
+		tag_commit_ref = $container/tag_commit/input.text,
+		tag_message = $container/tag_message/input.text,
+		force = custom == CUSTOM_ACTION
+	}
+	pass
+
+func _on_ready():
+	tag_name_input = $container/tag_name/input;
+	tag_name_input.connect(\"text_changed\", self, \"_on_text_changed\");
+	validation();
+	pass
+
+func _on_show_dialog(args):
+	tag_name_input.text = \"\";
+	$container/tag_message/input.text = \"\";
+	pass
+
+func _on_text_changed(new_text):
+	validation();
+	pass
+
+func validation():
+	var validate = validate_input();
+	get_ok().disabled = !validate;
+	get_custom_btn().disabled = !validate;
+	pass
+
+func validate_input():
+	var tag_name = tag_name_input.text;
+	return tag_name && tag_name.find(\" \") == -1;
+	pass"
+
+[node name="create_tag_dialog" type="AcceptDialog"]
+margin_right = 527.0
+margin_bottom = 291.0
+window_title = ""
+script = SubResource( 1 )
+
+[node name="container" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -36.0
+
+[node name="tag_name" type="VBoxContainer" parent="container"]
+margin_right = 511.0
+margin_bottom = 42.0
+
+[node name="label" type="Label" parent="container/tag_name"]
+margin_right = 511.0
+margin_bottom = 14.0
+text = "Tag name"
+
+[node name="input" type="LineEdit" parent="container/tag_name"]
+margin_top = 18.0
+margin_right = 511.0
+margin_bottom = 42.0
+
+[node name="tag_commit" type="VBoxContainer" parent="container"]
+margin_top = 46.0
+margin_right = 511.0
+margin_bottom = 88.0
+
+[node name="label" type="Label" parent="container/tag_commit"]
+margin_right = 511.0
+margin_bottom = 14.0
+text = "Commit ref"
+
+[node name="input" type="LineEdit" parent="container/tag_commit"]
+margin_top = 18.0
+margin_right = 511.0
+margin_bottom = 42.0
+placeholder_text = "Optional"
+
+[node name="tag_message" type="VBoxContainer" parent="container"]
+margin_top = 92.0
+margin_right = 511.0
+margin_bottom = 247.0
+size_flags_vertical = 3
+
+[node name="label" type="Label" parent="container/tag_message"]
+margin_right = 511.0
+margin_bottom = 14.0
+text = "Tag message"
+
+[node name="input" type="TextEdit" parent="container/tag_message"]
+margin_top = 18.0
+margin_right = 511.0
+margin_bottom = 155.0
+mouse_default_cursor_shape = 0
+size_flags_vertical = 3
