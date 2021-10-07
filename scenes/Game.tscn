@@ -17,6 +17,3 @@ asteroid_speed_max = 70.0
 position = Vector2( 331.359, 279.931 )
 linear_damp = 1.0
 angular_damp = 1.0
-Fill = Color( 0, 0, 0, 1 )
-LineWidth = 2.0
-test = true

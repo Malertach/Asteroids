@@ -25,8 +25,8 @@ export var test = true
 # Example: "var health = max_health setget set_health"
 
 ## private variables ##
-var _speed = 150.0
-var _torque = 300
+var _acceleration_factor: float = 150.0
+var _torque_factor: float = 300.0
 onready var _linear_dampening = self.linear_damp
 onready var _angular_dampening = self.angular_damp
 
@@ -53,15 +53,14 @@ func _integrate_forces(_state) -> void:
 	applied_force = Vector2.ZERO
 	applied_torque = 0.0
 	
-	for direction in INPUTS.keys():
-		if Input.is_action_pressed(direction):
-			match direction:
-				"ui_up", "ui_down":
-					# movement direction
-					applied_force = (INPUTS[direction].rotated(rotation) * _speed)
-				"ui_left", "ui_right":
-					# rotation
-					applied_torque = (INPUTS[direction] * _torque)
+	# read controller and keyboard inputs
+	# only use y componen for acceleration
+	var y_axis_vector: Vector2 = Vector2(0, Input.get_action_strength("ui_down") 
+		- Input.get_action_strength("ui_up"))
+	applied_force = y_axis_vector.rotated(rotation) * _acceleration_factor
+	# translate left/right buttons and x-axis coponents of joystick to rotation
+	applied_torque = (Input.get_action_strength("ui_right")
+		- Input.get_action_strength("ui_left")) * _torque_factor
 	
 	if applied_force != Vector2.ZERO:
 		# force is applied, button is pressed
