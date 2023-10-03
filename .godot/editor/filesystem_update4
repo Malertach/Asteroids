@@ -1,0 +1,9 @@
+res://default_env.tres
+res://scenes/Game.tscn
+res://scenes/chunk_space_objects.gd
+res://scenes/Player.tscn
+res://scenes/Player.gd
+res://enteties/asteroid_spawner.gd
+res://scenes/Asteroid.tscn
+res://scenes/asteroid.gd
+res://scenes/ChunkySpaceObjects.tscn

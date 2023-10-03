@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 
@@ -7,7 +7,7 @@ var drop_down : PopupMenu
 
 
 func _enter_tree() -> void:
-	connect("resource_saved", self, "_on_resource_saved")
+	connect("resource_saved", Callable(self, "_on_resource_saved"))
 	_init_palette()
 
 
@@ -24,18 +24,18 @@ func _on_resource_saved(resource : Resource) -> void:
 
 
 func _init_palette() -> void:
-	code_snippet_popup = load("res://addons/CodeSnippetPopup/CodeSnippetPopup.tscn").instance()
+	code_snippet_popup = load("res://addons/CodeSnippetPopup/CodeSnippetPopup.tscn").instantiate()
 	code_snippet_popup.INTERFACE = get_editor_interface()
 	code_snippet_popup.EDITOR = get_editor_interface().get_script_editor()
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, code_snippet_popup)
 	
-	drop_down = load("res://addons/CodeSnippetPopup/DropDownPopup.tscn").instance()
+	drop_down = load("res://addons/CodeSnippetPopup/DropDownPopup.tscn").instantiate()
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, drop_down)
-	drop_down.connect("show_options", drop_down, "_on_DropDown_shown")
+	drop_down.connect("show_options", Callable(drop_down, "_on_DropDown_shown"))
 	drop_down.main = code_snippet_popup
 	code_snippet_popup.drop_down = drop_down
 	
-	connect("main_screen_changed", code_snippet_popup, "_on_main_screen_changed")
+	connect("main_screen_changed", Callable(code_snippet_popup, "_on_main_screen_changed"))
 
 
 func _cleanup_palette() -> void:

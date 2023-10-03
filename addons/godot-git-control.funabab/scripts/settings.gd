@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 const SETTINGS_PATH = "res://addons/godot-git-control.funabab/user_settings.json";
 
@@ -49,7 +49,9 @@ func get_settings():
 		var content = file.get_as_text();
 		file.close();
 
-		var json_result = JSON.parse(content);
+		var test_json_conv = JSON.new()
+		test_json_conv.parse(content);
+		var json_result = test_json_conv.get_data()
 		if json_result.error == OK && typeof(json_result.result) == TYPE_DICTIONARY:
 			return json_result.result;
 	return get_default_settings();
@@ -60,7 +62,7 @@ func set(key, value):
 	pass
 
 func save_settings():
-	var json = JSON.print(data);
+	var json = JSON.stringify(data);
 	var file = File.new();
 	file.open(SETTINGS_PATH, File.WRITE);
 	file.store_string(json);

@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 const FILE = "res://.gitignore";
 const DEFAULT_PATTERNS = [
@@ -6,7 +6,7 @@ const DEFAULT_PATTERNS = [
 	"/addons/godot-git-control.funabab/*"];
 
 func initialize():
-	var dir = Directory.new();
+	var dir = DirAccess.new();
 	if !dir.file_exists(FILE):
 		save_patterns(DEFAULT_PATTERNS);
 	pass
@@ -25,7 +25,7 @@ func load_patterns():
 	file.open(FILE, File.READ);
 	while(!file.eof_reached()):
 		var line = file.get_line().strip_edges();
-		if !line.empty() && !line.begins_with("#"):
+		if !line.is_empty() && !line.begins_with("#"):
 			patterns.append(line);
 	file.close();
 	return patterns;

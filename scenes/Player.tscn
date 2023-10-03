@@ -1,20 +1,21 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=4 format=3 uid="uid://da5sg7y1puvwa"]
 
-[ext_resource path="res://scenes/ChunkySpaceObjects.tscn" type="PackedScene" id=1]
-[ext_resource path="res://scenes/Player.gd" type="Script" id=2]
-[ext_resource path="res://scenes/Weapon.tscn" type="PackedScene" id=3]
+[ext_resource type="PackedScene" uid="uid://cxt5t08qfj2nu" path="res://scenes/ChunkySpaceObjects.tscn" id="1"]
+[ext_resource type="Script" path="res://scenes/Player.gd" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/Weapon.tscn" id="3"]
 
-[node name="Player" instance=ExtResource( 1 )]
-script = ExtResource( 2 )
-OutLine = Color( 0.027451, 0.368627, 0.00784314, 1 )
-Polygon = PoolVector2Array( 0, 0, -20, 20, 0, -30, 20, 20 )
+[node name="Player" instance=ExtResource("1")]
+max_contacts_reported = 1
+script = ExtResource("2")
+test = true
+OutLine = Color(0.027451, 0.368627, 0.00784314, 1)
+Polygon = PackedVector2Array(0, 0, -20, 20, 0, -30, 20, 20)
 
 [node name="Visuals" parent="." index="0"]
-color = Color( 0, 0, 0, 0.831373 )
-polygon = PoolVector2Array( 0, 0, -40, 40, 0, -60, 40, 40 )
+polygon = PackedVector2Array(0, 0, -20, 20, 0, -30, 20, 20)
 
 [node name="CollisionPolygon2D" parent="." index="1"]
-polygon = PoolVector2Array( 0, 0, -40, 40, 0, -60, 40, 40 )
+polygon = PackedVector2Array(0, 0, -20, 20, 0, -30, 20, 20)
 
-[node name="Weapon" parent="." index="2" instance=ExtResource( 3 )]
-position = Vector2( 0, -68 )
+[node name="Weapon" parent="." index="2" instance=ExtResource("3")]
+position = Vector2(0, -68)

@@ -1,4 +1,4 @@
-tool
+@tool
 extends PopupMenu
 
 signal show_options
@@ -7,26 +7,26 @@ var main : PopupPanel
 var placeholder : String
 
 
-func _unhandled_key_input(event: InputEventKey) -> void:
+func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_action("ui_cancel") and placeholder:
 		placeholder = ""
 		var tmp = OS.clipboard
 		code_editor.cut()
 		OS.clipboard = tmp
 	if visible:
-		get_tree().set_input_as_handled()
+		get_viewport().set_input_as_handled()
 
 
 func _on_DropDown_shown(option_string : String) -> void:
 	placeholder = option_string
-	rect_size = Vector2.ZERO
+	size = Vector2.ZERO
 	var options = placeholder.split(",")
 	for option in options:
 		add_item(option)
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 	var down = InputEventAction.new()
 	down.action = "ui_down"
-	down.pressed = true
+	down.button_pressed = true
 	Input.parse_input_event(down)
 
 

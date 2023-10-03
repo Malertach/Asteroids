@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 const OBJECT_TYPE_ADDED = 1;
 const OBJECT_TYPE_COPIED = 2;

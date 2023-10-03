@@ -1,10 +1,10 @@
-tool
-extends WindowDialog
+@tool
+extends Window
 
 
-onready var text_edit = $VBoxContainer/MarginContainer/TextEdit
-onready var cancel_button = $VBoxContainer/HBoxContainer/CancelButton
-onready var save_button = $VBoxContainer/HBoxContainer/SaveButton
+@onready var text_edit = $VBoxContainer/MarginContainer/TextEdit
+@onready var cancel_button = $VBoxContainer/HBoxContainer/CancelButton
+@onready var save_button = $VBoxContainer/HBoxContainer/SaveButton
 	
 const snippet_config = "res://addons/CodeSnippetPopup/CodeSnippets.cfg"
 signal snippets_changed

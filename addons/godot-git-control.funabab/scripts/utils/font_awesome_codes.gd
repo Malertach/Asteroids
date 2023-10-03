@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 # font-awesome-4.7.0
 

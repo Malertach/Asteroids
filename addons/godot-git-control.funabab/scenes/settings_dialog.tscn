@@ -47,7 +47,7 @@ func _on_show_dialog(args):
 			modified = default_value != input_node.text;
 		elif input_node is CheckBox:
 			var toggled = Settings.get(input_node.get_meta(\"key\"));
-			input_node.pressed = toggled;
+			input_node.button_pressed = toggled;
 			modified = default_value != toggled;
 		elif input_node is OptionButton:
 			var select = Settings.get_as_int(input_node.get_meta(\"key\"));
@@ -72,13 +72,13 @@ func set_ui():
 				input_node = LineEdit.new();
 				default_value = Settings.get_default(key);
 				input_node.size_flags_horizontal = Control.SIZE_EXPAND_FILL;
-				input_node.connect(\"text_changed\", self, \"_on_list_item_val_text_input_changed\", [container]);
+				input_node.connect(\"text_changed\", Callable(self, \"_on_list_item_val_text_input_changed\").bind(container));
 			TYPE_BOOL:
 				input_node = CheckBox.new();
 				input_node.text = manager.git.Lang.tr(\"value_on\");
 				default_value = Settings.get_default(key);
 				input_node.size_flags_horizontal = Control.SIZE_EXPAND_FILL;
-				input_node.connect(\"toggled\", self, \"_on_list_item_val_input_toggled\", [container]);
+				input_node.connect(\"toggled\", Callable(self, \"_on_list_item_val_input_toggled\").bind(container));
 			TYPE_ARRAY:
 				input_node = OptionButton.new();
 				default_value = Settings.get_default_as_int(key);
@@ -87,7 +87,7 @@ func set_ui():
 				for arr in Settings.LAYOUT[key]:
 					input_node.add_item(arr, id);
 					id += 1;
-				input_node.connect(\"item_selected\", self, \"_on_list_item_val_option_input_selected\", [container]);
+				input_node.connect(\"item_selected\", Callable(self, \"_on_list_item_val_option_input_selected\").bind(container));
 
 		if input_node:
 			input_node.set_meta(\"key\", key);
@@ -96,9 +96,9 @@ func set_ui():
 			container.add_child(input_node);
 
 			var reset_btn = Button.new();
-			reset_btn.connect(\"pressed\", self, \"_on_list_item_reset_btn_pressed\", [container]);
+			reset_btn.connect(\"pressed\", Callable(self, \"_on_list_item_reset_btn_pressed\").bind(container));
 			reset_btn.name = \"reset\";
-			reset_btn.add_font_override(\"font\", octicon_font);
+			reset_btn.add_theme_font_override(\"font\", octicon_font);
 			reset_btn.text = \"\\uf051\";
 			container.add_child(reset_btn);
 
@@ -137,7 +137,7 @@ func _on_list_item_reset_btn_pressed(container):
 	if input is LineEdit:
 		input.text = input.get_meta(\"default_value\");
 	elif input is CheckBox:
-		input.pressed = input.get_meta(\"default_value\");
+		input.button_pressed = input.get_meta(\"default_value\");
 	elif input is OptionButton:
 		input.select(input.get_meta(\"default_value\"));
 	container.get_node(\"reset\").visible = false;
@@ -151,15 +151,15 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 549.0
-margin_bottom = 245.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+offset_right = 549.0
+offset_bottom = 245.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-popup_exclusive = false
+exclusive = false
 window_title = ""
 resizable = false
 dialog_hide_on_ok = true
@@ -172,12 +172,12 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = 8.0
-margin_right = -8.0
-margin_bottom = -36.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -36.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
@@ -190,10 +190,10 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 10.0
-margin_right = -10.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = true
+offset_left = 10.0
+offset_right = -10.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = true
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
@@ -210,10 +210,10 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 513.0
-margin_bottom = 201.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+offset_right = 513.0
+offset_bottom = 201.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 mouse_filter = 1
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 3

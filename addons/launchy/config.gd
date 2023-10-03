@@ -1,27 +1,27 @@
-tool
-extends WindowDialog
+@tool
+extends Window
 
 var editor_settings  #A reference to global EditorSettings from parent EditorPlugin
 
 #Updates the tree with the latest settings.
-func _about_to_show():
+func _about_to_popup():
 	$ConfigItems.populate(editor_settings.get_setting("editors/external/associations"), true)
 	pass
 
 func _ready():
-	$MarginContainer/btnAdd.connect("pressed",self, "_on_btnAdd_pressed")
+	$MarginContainer/btnAdd.connect("pressed", Callable(self, "_on_btnAdd_pressed"))
 
-	$HBoxOKCancel/OK.connect("pressed", self, "_on_OK_pressed")
-	$HBoxOKCancel/Cancel.connect("pressed", self, "_on_Cancel_pressed")
-	$HBoxOKCancel/Apply.connect("pressed", self, "_on_Apply_pressed")
+	$HBoxOKCancel/OK.connect("pressed", Callable(self, "_on_OK_pressed"))
+	$HBoxOKCancel/Cancel.connect("pressed", Callable(self, "_on_Cancel_pressed"))
+	$HBoxOKCancel/Apply.connect("pressed", Callable(self, "_on_Apply_pressed"))
 	
 	#For updating the apply button.
-	$ConfigItems.connect('item_edited',self, '_on_ConfigItems_item_edited')
-	$ConfigItems.connect('button_pressed',self, '_on_ConfigItems_button_pressed')
+	$ConfigItems.connect('item_edited', Callable(self, '_on_ConfigItems_item_edited'))
+	$ConfigItems.connect('button_pressed', Callable(self, '_on_ConfigItems_button_pressed'))
 
 	$ConfigItems.set_column_expand(0, true)
 
-	connect("about_to_show",self, "_about_to_show")
+	connect("about_to_popup", Callable(self, "_about_to_popup"))
 
 #Add an association
 func _on_btnAdd_pressed():

@@ -46,7 +46,7 @@ func _ready():
 
 ## public methods ##
 func shoot():
-	var new_laser = laser_scene.instance()
+	var new_laser = laser_scene.instantiate()
 	new_laser.global_position = self.global_position
 	new_laser.global_rotation = self.global_rotation
 	# add bullet to game, as it should not move with this node

@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 const Octicon = preload("res://addons/godot-git-control.funabab/scripts/utils/octicons_codes.gd");
 #const FontAwesome = preload("res://addons/godot-git-control.funabab/scripts/utils/font_awesome_codes.gd");
@@ -38,7 +38,7 @@ static func _get_icon(name):
 	if types.has(icon_type):
 		print("icon type is: ", types[icon_type])
 		var code = types[icon_type].get_icon(icon_name);
-		if !code.empty():
+		if !code.is_empty():
 			return {
 				"type": icon_type,
 				"code": code

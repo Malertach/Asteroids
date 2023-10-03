@@ -25,7 +25,7 @@ func _tr():
 
 func _on_ready():
 	new_branch_input = $container/new_branch/input;
-	new_branch_input.connect(\"text_changed\", self, \"_on_text_changed\");
+	new_branch_input.connect(\"text_changed\", Callable(self, \"_on_text_changed\"));
 	validation();
 	pass
 
@@ -53,7 +53,7 @@ func _on_action_event(what, args):
 
 func validation():
 	var validate = is_input_valid();
-	get_ok().disabled = !validate;
+	get_ok_button().disabled = !validate;
 	get_custom_btn().disabled = !validate;
 	pass
 
@@ -65,46 +65,46 @@ func is_input_valid():
 "
 
 [node name="create_branch_dialog" type="AcceptDialog"]
-margin_right = 549.0
-margin_bottom = 138.0
+offset_right = 549.0
+offset_bottom = 138.0
 window_title = ""
 script = SubResource( 1 )
 
 [node name="container" type="VBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = 8.0
-margin_right = -8.0
-margin_bottom = -36.0
-custom_constants/separation = 10
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -36.0
+theme_override_constants/separation = 10
 
 [node name="current_branch" type="VBoxContainer" parent="container"]
-margin_right = 533.0
-margin_bottom = 42.0
+offset_right = 533.0
+offset_bottom = 42.0
 
 [node name="label" type="Label" parent="container/current_branch"]
-margin_right = 533.0
-margin_bottom = 14.0
+offset_right = 533.0
+offset_bottom = 14.0
 text = "Current branch"
 
 [node name="input" type="LineEdit" parent="container/current_branch"]
-margin_top = 18.0
-margin_right = 533.0
-margin_bottom = 42.0
+offset_top = 18.0
+offset_right = 533.0
+offset_bottom = 42.0
 editable = false
 
 [node name="new_branch" type="VBoxContainer" parent="container"]
-margin_top = 52.0
-margin_right = 533.0
-margin_bottom = 94.0
+offset_top = 52.0
+offset_right = 533.0
+offset_bottom = 94.0
 
 [node name="label" type="Label" parent="container/new_branch"]
-margin_right = 533.0
-margin_bottom = 14.0
+offset_right = 533.0
+offset_bottom = 14.0
 text = "Branch branch"
 
 [node name="input" type="LineEdit" parent="container/new_branch"]
-margin_top = 18.0
-margin_right = 533.0
-margin_bottom = 42.0
+offset_top = 18.0
+offset_right = 533.0
+offset_bottom = 42.0

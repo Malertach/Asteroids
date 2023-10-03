@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 const NAME = "GitControl";
@@ -21,12 +21,12 @@ func _enter_tree():
 
 	plugin_mode = Settings.get_as_int("plugin_mode");
 	if plugin_mode == PluginMode.DEFAULT || plugin_mode == PluginMode.BOTTOM_DOCK:
-		control = load("res://addons/godot-git-control.funabab/scenes/main_gui.tscn").instance();
+		control = load("res://addons/godot-git-control.funabab/scenes/main_gui.tscn").instantiate();
 		control.setup(Git);
 		toolbtn = add_control_to_bottom_panel(control, NAME);
-		Git.connect("action_event", self, "_on_action_event");
+		Git.connect("action_event", Callable(self, "_on_action_event"));
 	if plugin_mode == PluginMode.DEFAULT || plugin_mode == PluginMode.TOOLBAR:
-		control_toolbar_btn = load("res://addons/godot-git-control.funabab/scenes/git_control_toolbar.tscn").instance();
+		control_toolbar_btn = load("res://addons/godot-git-control.funabab/scenes/git_control_toolbar.tscn").instantiate();
 		control_toolbar_btn.setup(Git);
 		add_control_to_container(CONTAINER_TOOLBAR, control_toolbar_btn);
 	Git.call_deferred("initialize"); ## should be called last
@@ -47,7 +47,7 @@ func _on_action_event(what, args):
 
 func _exit_tree():
 	if control:
-		Git.disconnect("action_event", self, "_on_action_event");
+		Git.disconnect("action_event", Callable(self, "_on_action_event"));
 		remove_control_from_bottom_panel(control);
 		control.free();
 		control = null;

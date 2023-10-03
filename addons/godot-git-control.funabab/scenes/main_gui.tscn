@@ -1,43 +1,43 @@
 [gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://addons/godot-git-control.funabab/scripts/gui/main_gui.gd" type="Script" id=1]
-[ext_resource path="res://addons/godot-git-control.funabab/scenes/res/octicon_font.tres" type="DynamicFont" id=2]
-[ext_resource path="res://addons/godot-git-control.funabab/scenes/res/workspace_object_font.tres" type="DynamicFont" id=3]
+[ext_resource path="res://addons/godot-git-control.funabab/scenes/res/octicon_font.tres" type="FontFile" id=2]
+[ext_resource path="res://addons/godot-git-control.funabab/scenes/res/workspace_object_font.tres" type="FontFile" id=3]
 
 [sub_resource type="GDScript" id=1]
 resource_name = "menus"
 script/source = "tool
 extends HBoxContainer
 
-onready var root = $\"../\";
+@onready var root = $\"../\";
 
-onready var refresh_btn = $branch_toolbar/refresh_btn;
-onready var branches_btn = $branch_toolbar/branches_btn;
-onready var delete_branch_btn = $branch_toolbar/delete_branch_btn;
-onready var commit_btn = $menu_bar/commit_btn;
-onready var diff_btn = $menu_bar/diff_btn;
-onready var revert_btn = $menu_bar/revert_btn;
-onready var tag_btn = $menu_bar/tag_btn;
-onready var rebase_btn = $menu_bar/rebase_btn;
-onready var merge_btn = $menu_bar/merge_btn;
-onready var branch_btn = $menu_bar/branch_btn;
-onready var log_btn = $menu_bar/log_btn;
-onready var settings_btn = $menu_bar/settings_btn;
-onready var gitignore_btn = $menu_bar/gitignore_btn;
+@onready var refresh_btn = $branch_toolbar/refresh_btn;
+@onready var branches_btn = $branch_toolbar/branches_btn;
+@onready var delete_branch_btn = $branch_toolbar/delete_branch_btn;
+@onready var commit_btn = $menu_bar/commit_btn;
+@onready var diff_btn = $menu_bar/diff_btn;
+@onready var revert_btn = $menu_bar/revert_btn;
+@onready var tag_btn = $menu_bar/tag_btn;
+@onready var rebase_btn = $menu_bar/rebase_btn;
+@onready var merge_btn = $menu_bar/merge_btn;
+@onready var branch_btn = $menu_bar/branch_btn;
+@onready var log_btn = $menu_bar/log_btn;
+@onready var settings_btn = $menu_bar/settings_btn;
+@onready var gitignore_btn = $menu_bar/gitignore_btn;
 
 func _ready():
-	root.connect(\"action_event\", self, \"_on_action_event\");
-	refresh_btn.connect(\"pressed\", self, \"_on_refresh_btn_pressed\");
-	commit_btn.connect(\"pressed\", self, \"_on_commit_btn_pressed\");
-	diff_btn.connect(\"pressed\", self, \"_on_diff_btn_pressed\");
-	revert_btn.connect(\"pressed\", self, \"_on_revert_btn_pressed\");
-	tag_btn.connect(\"pressed\", self, \"_on_tag_btn_pressed\");
-	rebase_btn.connect(\"pressed\", self, \"_on_rebase_btn_pressed\");
-	merge_btn.connect(\"pressed\", self, \"_on_merge_btn_pressed\");
-	branch_btn.connect(\"pressed\", self, \"_on_branch_btn_pressed\");
-	log_btn.connect(\"pressed\", self, \"_on_log_btn_pressed\");
-	settings_btn.connect(\"pressed\", self, \"_on_settings_btn_pressed\");
-	gitignore_btn.connect(\"pressed\", self, \"_on_gitignore_btn_pressed\");
+	root.connect(\"action_event\", Callable(self, \"_on_action_event\"));
+	refresh_btn.connect(\"pressed\", Callable(self, \"_on_refresh_btn_pressed\"));
+	commit_btn.connect(\"pressed\", Callable(self, \"_on_commit_btn_pressed\"));
+	diff_btn.connect(\"pressed\", Callable(self, \"_on_diff_btn_pressed\"));
+	revert_btn.connect(\"pressed\", Callable(self, \"_on_revert_btn_pressed\"));
+	tag_btn.connect(\"pressed\", Callable(self, \"_on_tag_btn_pressed\"));
+	rebase_btn.connect(\"pressed\", Callable(self, \"_on_rebase_btn_pressed\"));
+	merge_btn.connect(\"pressed\", Callable(self, \"_on_merge_btn_pressed\"));
+	branch_btn.connect(\"pressed\", Callable(self, \"_on_branch_btn_pressed\"));
+	log_btn.connect(\"pressed\", Callable(self, \"_on_log_btn_pressed\"));
+	settings_btn.connect(\"pressed\", Callable(self, \"_on_settings_btn_pressed\"));
+	gitignore_btn.connect(\"pressed\", Callable(self, \"_on_gitignore_btn_pressed\"));
 	pass
 
 func _on_refresh_btn_pressed():
@@ -110,13 +110,13 @@ resource_name = "branches_btn"
 script/source = "tool
 extends OptionButton
 
-onready var root = $\"../../../\";
-onready var delete_branch_btn = $\"../delete_branch_btn\";
+@onready var root = $\"../../../\";
+@onready var delete_branch_btn = $\"../delete_branch_btn\";
 
 func _ready():
-	root.connect(\"action_event\", self, \"_on_action_event\");
-	connect(\"item_selected\", self, \"_on_item_selected\");
-	delete_branch_btn.get_popup().connect(\"id_pressed\", self, \"_on_delete_popup_pressed\");
+	root.connect(\"action_event\", Callable(self, \"_on_action_event\"));
+	connect(\"item_selected\", Callable(self, \"_on_item_selected\"));
+	delete_branch_btn.get_popup().connect(\"id_pressed\", Callable(self, \"_on_delete_popup_pressed\"));
 	pass
 
 func _on_action_event(what, args):
@@ -164,19 +164,19 @@ var total_objects = 0;
 var selected_objects = 0;
 
 var root_item;
-onready var root = $\"../../../\";
+@onready var root = $\"../../../\";
 func _ready():
-	root.connect(\"action_event\", self, \"_on_action_event\");
-	connect(\"cell_selected\", self, \"_on_cell_selected\");
+	root.connect(\"action_event\", Callable(self, \"_on_action_event\"));
+	connect(\"cell_selected\", Callable(self, \"_on_cell_selected\"));
 
 	columns = 3;
 	hide_root = true;
 	select_mode = SELECT_SINGLE;
-	add_font_override(\"font\", load(\"res://addons/godot-git-control.funabab/scenes/res/workspace_object_font.tres\"));
+	add_theme_font_override(\"font\", load(\"res://addons/godot-git-control.funabab/scenes/res/workspace_object_font.tres\"));
 	set_column_expand(CELL_ICON, false);
-	set_column_min_width(CELL_ICON, 40);
+	set_column_custom_minimum_width(CELL_ICON, 40);
 	set_column_expand(CELL_CHECKBOX, false);
-	set_column_min_width(CELL_CHECKBOX, 25);
+	set_column_custom_minimum_width(CELL_CHECKBOX, 25);
 	create_item();
 
 	setup_root_item();
@@ -205,7 +205,7 @@ func create_child_item(parent, val, select = true):
 	for key in val:
 		item.set_tooltip(key, val[key] if key != CELL_ICON else \" \")
 		item.set_text(key, val[key]);
-		item.set_text_align(key, TreeItem.ALIGN_LEFT);
+		item.set_text_alignment(key, TreeItem.ALIGN_LEFT);
 	return item;
 	pass
 
@@ -280,15 +280,15 @@ func _on_cell_selected():
 script/source = "tool
 extends Panel
 
-onready var root = $\"../../../\";
-onready var output_console = $output_console;
-onready var clear_output_btn = $\"../../../menus/menu_bar/clear_output_btn\";
+@onready var root = $\"../../../\";
+@onready var output_console = $output_console;
+@onready var clear_output_btn = $\"../../../menus/menu_bar/clear_output_btn\";
 func _ready():
-	root.connect(\"action_event\", self, \"_on_action_event\");
-	clear_output_btn.connect(\"pressed\", self, \"_on_clear_output_btn_pressed\");
+	root.connect(\"action_event\", Callable(self, \"_on_action_event\"));
+	clear_output_btn.connect(\"pressed\", Callable(self, \"_on_clear_output_btn_pressed\"));
 
 	output_console.bbcode_enabled = true;
-	output_console.connect(\"meta_clicked\", self, \"_on_output_console_meta_clicked\");
+	output_console.connect(\"meta_clicked\", Callable(self, \"_on_output_console_meta_clicked\"));
 	print_console(\"@funabab (c) 2018\");
 	pass
 
@@ -306,7 +306,7 @@ func _on_clear_output_btn_pressed():
 
 func print_console(msg = \"\"):
 	msg = \"*** Output Console ***\\n\" + msg;
-	output_console.bbcode_text = msg;
+	output_console.text = msg;
 	pass
 
 func _on_action_event(what, args):
@@ -324,13 +324,13 @@ func _on_action_event(what, args):
 script/source = "tool
 extends PanelContainer
 
-onready var root = $\"../../../\";
-onready var console = $container/commnad_console;
-onready var clear_git_cmd_btn = $container/header/container/options/clear_git_terminal_btn;
+@onready var root = $\"../../../\";
+@onready var console = $container/commnad_console;
+@onready var clear_git_cmd_btn = $container/header/container/options/clear_git_terminal_btn;
 
 func _ready():
-	root.connect(\"action_event\", self, \"_on_action_event\");
-	clear_git_cmd_btn.connect(\"pressed\", self, \"_on_clear_git_cmd_btn_pressed\");
+	root.connect(\"action_event\", Callable(self, \"_on_action_event\"));
+	clear_git_cmd_btn.connect(\"pressed\", Callable(self, \"_on_clear_git_cmd_btn_pressed\"));
 	pass
 
 func _on_action_event(what, args):
@@ -355,7 +355,7 @@ func console_write(msg = \"\"):
 [sub_resource type="Shader" id=6]
 code = "shader_type canvas_item;
 
-uniform vec4 background_color:hint_color;
+uniform vec4 background_color:source_color;
 
 void fragment() {
 	COLOR = background_color;
@@ -373,38 +373,38 @@ extends LineEdit
 
 var Utils = preload(\"res://addons/godot-git-control.funabab/scripts/utils/utils.gd\");
 
-onready var root = $\"../../../../../\";
+@onready var root = $\"../../../../../\";
 var history = [];
 var idx = 0;
 
 func _ready():
-	connect(\"text_entered\", self, \"_on_text_entered\");
+	connect(\"text_submitted\", Callable(self, \"_on_text_entered\"));
 	pass
 
 func history_up():
-	if history.empty():
+	if history.is_empty():
 		return;
 	idx = max(0, idx - 1);
 	text = history[idx];
-	caret_position = text.length();
+	caret_column = text.length();
 	pass
 
 func history_down():
 	var size = history.size();
-	if history.empty() || idx + 1 >= size:
+	if history.is_empty() || idx + 1 >= size:
 		idx = size;
 		text = \"\";
 		return;
 	idx = idx + 1;
 	text = history[idx];
-	caret_position = text.length();
+	caret_column = text.length();
 	pass
 
 func _unhandled_input(event):
 	if event is InputEventKey:
-		if event.scancode == KEY_UP:
+		if event.keycode == KEY_UP:
 			history_up();
-		elif event.scancode == KEY_DOWN:
+		elif event.keycode == KEY_DOWN:
 			history_down();
 	pass
 
@@ -435,156 +435,156 @@ func _on_text_entered(new_text):
 	pass"
 
 [node name="main_gui" type="VBoxContainer"]
-margin_right = 1024.0
-margin_bottom = 600.0
+offset_right = 1024.0
+offset_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/separation = 5
+theme_override_constants/separation = 5
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="menus" type="HBoxContainer" parent="."]
-margin_right = 1024.0
-margin_bottom = 24.0
-custom_constants/separation = 12
+offset_right = 1024.0
+offset_bottom = 24.0
+theme_override_constants/separation = 12
 script = SubResource( 1 )
 
 [node name="branch_toolbar" type="HBoxContainer" parent="menus"]
-margin_right = 168.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 168, 24 )
+offset_right = 168.0
+offset_bottom = 24.0
+custom_minimum_size = Vector2( 168, 24 )
 
 [node name="refresh_btn" type="Button" parent="menus/branch_toolbar"]
-margin_right = 29.0
-margin_bottom = 24.0
-hint_tooltip = "Refresh"
+offset_right = 29.0
+offset_bottom = 24.0
+tooltip_text = "Refresh"
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 2 )
+theme_override_fonts/font = ExtResource( 2 )
 text = ""
 
 [node name="branches_btn" type="OptionButton" parent="menus/branch_toolbar"]
-margin_left = 33.0
-margin_right = 135.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 102, 0 )
+offset_left = 33.0
+offset_right = 135.0
+offset_bottom = 24.0
+custom_minimum_size = Vector2( 102, 0 )
 size_flags_horizontal = 3
 toggle_mode = false
 script = SubResource( 2 )
 
 [node name="delete_branch_btn" type="MenuButton" parent="menus/branch_toolbar"]
-margin_left = 139.0
-margin_right = 168.0
-margin_bottom = 24.0
-hint_tooltip = "Refresh"
+offset_left = 139.0
+offset_right = 168.0
+offset_bottom = 24.0
+tooltip_text = "Refresh"
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 2 )
+theme_override_fonts/font = ExtResource( 2 )
 toggle_mode = false
 text = ""
 flat = false
 
 [node name="menu_bar" type="HBoxContainer" parent="menus"]
-margin_left = 180.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 180.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="commit_btn" type="Button" parent="menus/menu_bar"]
-margin_right = 85.0
-margin_bottom = 24.0
+offset_right = 85.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 2 )
+theme_override_fonts/font = ExtResource( 2 )
 text = ""
 
 [node name="diff_btn" type="Button" parent="menus/menu_bar"]
-margin_left = 89.0
-margin_right = 174.0
-margin_bottom = 24.0
+offset_left = 89.0
+offset_right = 174.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 2 )
+theme_override_fonts/font = ExtResource( 2 )
 text = ""
 
 [node name="revert_btn" type="Button" parent="menus/menu_bar"]
-margin_left = 178.0
-margin_right = 263.0
-margin_bottom = 24.0
+offset_left = 178.0
+offset_right = 263.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 2 )
+theme_override_fonts/font = ExtResource( 2 )
 text = ""
 
 [node name="tag_btn" type="Button" parent="menus/menu_bar"]
-margin_left = 267.0
-margin_right = 352.0
-margin_bottom = 24.0
+offset_left = 267.0
+offset_right = 352.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 2 )
+theme_override_fonts/font = ExtResource( 2 )
 text = ""
 
 [node name="rebase_btn" type="Button" parent="menus/menu_bar"]
-margin_left = 356.0
-margin_right = 441.0
-margin_bottom = 24.0
+offset_left = 356.0
+offset_right = 441.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 2 )
+theme_override_fonts/font = ExtResource( 2 )
 text = ""
 
 [node name="merge_btn" type="Button" parent="menus/menu_bar"]
-margin_left = 445.0
-margin_right = 530.0
-margin_bottom = 24.0
+offset_left = 445.0
+offset_right = 530.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 2 )
+theme_override_fonts/font = ExtResource( 2 )
 text = ""
 
 [node name="branch_btn" type="Button" parent="menus/menu_bar"]
-margin_left = 534.0
-margin_right = 619.0
-margin_bottom = 24.0
+offset_left = 534.0
+offset_right = 619.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 2 )
+theme_override_fonts/font = ExtResource( 2 )
 text = ""
 
 [node name="log_btn" type="Button" parent="menus/menu_bar"]
-margin_left = 623.0
-margin_right = 708.0
-margin_bottom = 24.0
+offset_left = 623.0
+offset_right = 708.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 2 )
+theme_override_fonts/font = ExtResource( 2 )
 text = ""
 
 [node name="seperator" type="VSeparator" parent="menus/menu_bar"]
-margin_left = 712.0
-margin_right = 716.0
-margin_bottom = 24.0
+offset_left = 712.0
+offset_right = 716.0
+offset_bottom = 24.0
 
 [node name="gitignore_btn" type="Button" parent="menus/menu_bar"]
-margin_left = 720.0
-margin_right = 732.0
-margin_bottom = 24.0
+offset_left = 720.0
+offset_right = 732.0
+offset_bottom = 24.0
 
 [node name="settings_btn" type="Button" parent="menus/menu_bar"]
-margin_left = 736.0
-margin_right = 748.0
-margin_bottom = 24.0
+offset_left = 736.0
+offset_right = 748.0
+offset_bottom = 24.0
 
 [node name="clear_output_btn" type="Button" parent="menus/menu_bar"]
-margin_left = 752.0
-margin_right = 844.0
-margin_bottom = 24.0
+offset_left = 752.0
+offset_right = 844.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 text = "clear"
 
 [node name="main" type="HSplitContainer" parent="."]
-margin_top = 29.0
-margin_right = 1024.0
-margin_bottom = 600.0
+offset_top = 29.0
+offset_right = 1024.0
+offset_bottom = 600.0
 size_flags_vertical = 3
 
 [node name="workspace" type="Panel" parent="main"]
-margin_right = 168.0
-margin_bottom = 571.0
-rect_min_size = Vector2( 168, 0 )
+offset_right = 168.0
+offset_bottom = 571.0
+custom_minimum_size = Vector2( 168, 0 )
 size_flags_vertical = 3
 
 [node name="workspace_tree" type="Tree" parent="main/workspace"]
@@ -592,22 +592,22 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( 3 )
 columns = 3
 hide_root = true
 script = SubResource( 3 )
 
 [node name="consoles" type="VSplitContainer" parent="main"]
-margin_left = 180.0
-margin_right = 1024.0
-margin_bottom = 571.0
-rect_min_size = Vector2( 300, 0 )
+offset_left = 180.0
+offset_right = 1024.0
+offset_bottom = 571.0
+custom_minimum_size = Vector2( 300, 0 )
 size_flags_vertical = 3
 
 [node name="git_output" type="Panel" parent="main/consoles"]
-margin_right = 844.0
-margin_bottom = 90.0
-rect_min_size = Vector2( 0, 90 )
+offset_right = 844.0
+offset_bottom = 90.0
+custom_minimum_size = Vector2( 0, 90 )
 size_flags_horizontal = 3
 script = SubResource( 4 )
 
@@ -617,91 +617,91 @@ anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
-bbcode_text = "*** Output Console ***
+text = "*** Output Console ***
 @funabab (c) 2018"
 text = "*** Output Console ***
 @funabab (c) 2018"
 
 [node name="command_terminal" type="PanelContainer" parent="main/consoles"]
-margin_top = 102.0
-margin_right = 844.0
-margin_bottom = 571.0
+offset_top = 102.0
+offset_right = 844.0
+offset_bottom = 571.0
 size_flags_horizontal = 3
 script = SubResource( 5 )
 
 [node name="container" type="VBoxContainer" parent="main/consoles/command_terminal"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 837.0
-margin_bottom = 462.0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 837.0
+offset_bottom = 462.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/separation = 0
+theme_override_constants/separation = 0
 
 [node name="header" type="Panel" parent="main/consoles/command_terminal/container"]
 material = SubResource( 7 )
-margin_right = 830.0
-margin_bottom = 35.0
-rect_min_size = Vector2( 0, 35 )
+offset_right = 830.0
+offset_bottom = 35.0
+custom_minimum_size = Vector2( 0, 35 )
 size_flags_horizontal = 3
 
 [node name="container" type="HBoxContainer" parent="main/consoles/command_terminal/container/header"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 11.0
-margin_right = -10.0
+offset_left = 11.0
+offset_right = -10.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="title" type="Label" parent="main/consoles/command_terminal/container/header/container"]
-margin_right = 750.0
-margin_bottom = 35.0
+offset_right = 750.0
+offset_bottom = 35.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Command output:"
 valign = 1
 
 [node name="options" type="HBoxContainer" parent="main/consoles/command_terminal/container/header/container"]
-margin_left = 754.0
-margin_right = 809.0
-margin_bottom = 35.0
+offset_left = 754.0
+offset_right = 809.0
+offset_bottom = 35.0
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="link_container" type="CenterContainer" parent="main/consoles/command_terminal/container/header/container/options"]
-margin_bottom = 35.0
+offset_bottom = 35.0
 
 [node name="launch_terminal_btn" type="LinkButton" parent="main/consoles/command_terminal/container/header/container/options/link_container"]
-margin_top = 10.0
-margin_bottom = 24.0
+offset_top = 10.0
+offset_bottom = 24.0
 focus_mode = 2
 mouse_default_cursor_shape = 0
-enabled_focus_mode = 2
+focus_mode = 2
 
 [node name="seperator" type="VSeparator" parent="main/consoles/command_terminal/container/header/container/options"]
-margin_left = 4.0
-margin_right = 8.0
-margin_bottom = 35.0
+offset_left = 4.0
+offset_right = 8.0
+offset_bottom = 35.0
 
 [node name="clear_git_terminal_btn" type="Button" parent="main/consoles/command_terminal/container/header/container/options"]
-margin_left = 12.0
-margin_right = 55.0
-margin_bottom = 35.0
+offset_left = 12.0
+offset_right = 55.0
+offset_bottom = 35.0
 text = "clear"
 flat = true
 
 [node name="commnad_console" type="RichTextLabel" parent="main/consoles/command_terminal/container"]
-margin_top = 35.0
-margin_right = 830.0
-margin_bottom = 431.0
+offset_top = 35.0
+offset_right = 830.0
+offset_bottom = 431.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="command_input" type="LineEdit" parent="main/consoles/command_terminal/container"]
-margin_top = 431.0
-margin_right = 830.0
-margin_bottom = 455.0
+offset_top = 431.0
+offset_right = 830.0
+offset_bottom = 455.0
 placeholder_text = ">>"
 caret_blink = true
 script = SubResource( 8 )

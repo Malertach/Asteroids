@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 const LANG = {
 	"git_not_found": "Fatal error: Git not found"

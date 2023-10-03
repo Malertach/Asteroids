@@ -4,7 +4,7 @@ var Utils = preload("res://addons/godot-git-control.funabab/scripts/utils/utils.
 const CMD_CONSOLE_PREFIX = "> git ";
 
 func _setup():
-	git.connect("cmd_processed", self, "_on_cmd_ok");
+	git.connect("cmd_processed", Callable(self, "_on_cmd_ok"));
 	pass
 
 func _on_cmd_ok(cmd):
@@ -24,15 +24,15 @@ func _on_cmd_ok(cmd):
 	pass
 
 func parse_diff(data):
-	if data.empty():
+	if data.is_empty():
 		return null;
-	var result = PoolStringArray();
+	var result = PackedStringArray();
 	var lines = data.c_unescape().split("\n");
 	for line in lines:
 		var val = line;
 		if line.begins_with("diff --git "):
 			val = val.right("diff --git ".length());
-			val = val.substr(0, val.find_last(" ")).get_file();
+			val = val.substr(0, val.rfind(" ")).get_file();
 			val = "[color=aqua][b]" + val + "[/b][/color]";
 		elif line.begins_with("index "):
 			continue;
@@ -49,25 +49,25 @@ func parse_diff(data):
 		else:
 			val = "\t" + val;
 		result.append(val);
-	return result.join("\n");
+	return "\n".join(result);
 	pass
 
 func parse_cmd_message(cmd):
 	var message = "";
 	for i in range(cmd.commands.size()):
 		message += CMD_CONSOLE_PREFIX + Utils.string_array_to_string(cmd.commands[i], "", " ", true) + "\n";
-		if (cmd.show_result_in_terminal && !cmd.results[i][0].empty()):
+		if (cmd.show_result_in_terminal && !cmd.results[i][0].is_empty()):
 			message += Utils.string_array_to_string(cmd.results[i], "", "\n");
 	return message;
 	pass
 
 func print_cmd_console(message):
-	if !message.empty():
+	if !message.is_empty():
 		git.call_action(git.action.UI_WRITE_GIT_TERMINAL, message);
 	pass
 
 func print_output(message):
-	if !message.empty():
+	if !message.is_empty():
 		git.call_action(git.action.UI_WRITE_CONSOLE_OUTPUT, message);
 	pass
 

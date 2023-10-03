@@ -1,4 +1,4 @@
-tool # this is a tool or provides aid during level editing
+@tool # this is a tool or provides aid during level editing
 class_name Asteroid # name of this node in PascalCase
 extends ChunkySpaceObject
 # Comment describing content of this script
@@ -14,7 +14,7 @@ extends ChunkySpaceObject
 # Example: "MAX_LIVES = 3"
 
 ## exported variables ##
-export (float) var mass_factor = 10
+@export var mass_factor: float = 10
 
 ## public variables ##
 

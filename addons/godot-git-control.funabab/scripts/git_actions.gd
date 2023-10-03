@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 ## git related actions
 const GIT_INITIALIZE = 1;

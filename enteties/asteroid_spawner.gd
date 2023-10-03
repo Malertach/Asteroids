@@ -14,18 +14,18 @@ enum Sides {TOP = 0, BOTTOM = 1, LEFT = 2, RIGHT = 3}
 const ANGLE_INSIDE:float = 2 * PI # full turn around
 
 ## exported variables ##
-export (Rect2) var viewport_rect = Rect2(0, 0, 1024, 600) # screen dimensions. get this from parent with get_viewport_rect()
-export (Color, RGB) var OutLine = Color(0,0,0)
-export (Color, RGB) var Fill = Color(0,0,0)
-export (float) var LineWidth = 2.0
-export (float) var edge_lenght_min = 10
-export (float) var edge_lenght_max = 30
-export (int) var point_amount_min = 5
-export (int) var point_amount_max = 12
-export (float) var asteroid_speed_min = 70.0
-export (float) var asteroid_speed_max = 150.0
-export (float) var torque_inertia = 10.0 # how much torque has to be applied to rotate
-export (float) var torque_max = 10.0
+@export var viewport_rect: Rect2 = Rect2(0, 0, 1024, 600) # screen dimensions. get this from parent with get_viewport_rect()
+@export var OutLine: Color = Color(0,0,0)
+@export var Fill: Color = Color(0,0,0)
+@export var LineWidth: float = 2.0
+@export var edge_lenght_min: float = 10
+@export var edge_lenght_max: float = 30
+@export var point_amount_min: int = 5
+@export var point_amount_max: int = 12
+@export var asteroid_speed_min: float = 70.0
+@export var asteroid_speed_max: float = 150.0
+@export var torque_inertia: float = 10.0 # how much torque has to be applied to rotate
+@export var torque_max: float = 10.0
 
 ## public variables ##
 var asteroid_scene = preload("res://scenes/Asteroid.tscn")
@@ -64,9 +64,10 @@ func _ready() -> void:
 
 ## private methods ##
 func spawn_asteroid(edge_points := 0, position := Vector2.INF, directed_force := Vector2.INF, torque := 0.0) -> void:
-	var new_asteroid = asteroid_scene.instance()
+	var new_asteroid: Asteroid = asteroid_scene.instantiate()
+	add_child(new_asteroid)
 	
-	new_asteroid.Polygon = generate_polygon(edge_points)
+	new_asteroid.set_polygon(generate_polygon(edge_points))
 	generate_pos_dir() # TODO: prevent unecessary call of this function, if pos||dir ist explicitly set
 	if position == Vector2.INF:
 		# use generated position
@@ -78,8 +79,7 @@ func spawn_asteroid(edge_points := 0, position := Vector2.INF, directed_force :=
 	new_asteroid.set_outline_color(OutLine)
 	new_asteroid.set_filling_color(Fill)
 	new_asteroid.set_width(LineWidth)
-	#new_asteroid.Polygon = PoolVector2Array([Vector2(0, 0), Vector2(-10, 10), Vector2(0, 20), Vector2(10, 10), Vector2(10, 0)])
-	add_child(new_asteroid)
+	
 	
 	if directed_force == Vector2.INF:
 		# use generated force
@@ -103,13 +103,17 @@ func spawn_asteroid(edge_points := 0, position := Vector2.INF, directed_force :=
 	new_asteroid.apply_torque_impulse(torque)
 
 
-func generate_polygon(edge_points := 0) -> PoolVector2Array:
+func polar2cartesian(radius: float, angle: float) -> Vector2:
+	return Vector2.from_angle(angle) * radius
+
+
+func generate_polygon(edge_points := 0) -> PackedVector2Array:
 	var point_amount: int = edge_points
 	if point_amount == 0:
 		# no amount of points explicitly set
 		# get random amount
 		point_amount = rng.randi_range(point_amount_min, point_amount_max)
-	var polygon: PoolVector2Array = PoolVector2Array()
+	var polygon: PackedVector2Array = PackedVector2Array()
 	var optimal_angle: float = ANGLE_INSIDE / point_amount
 	var current_polar_angle: float = 0.0
 	polygon.resize(point_amount) # resize array once to not use append

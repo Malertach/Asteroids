@@ -24,9 +24,9 @@ func _on_show_dialog(args):
 "
 
 [node name="commit_message_dialog" type="AcceptDialog"]
-margin_right = 549.0
-margin_bottom = 245.0
-popup_exclusive = true
+offset_right = 549.0
+offset_bottom = 245.0
+exclusive = true
 window_title = "Enter commit message"
 dialog_text = "commit message"
 script = SubResource( 1 )
@@ -34,14 +34,14 @@ script = SubResource( 1 )
 [node name="commit_message" type="VBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = 22.0
-margin_right = -8.0
-margin_bottom = -36.0
+offset_left = 8.0
+offset_top = 22.0
+offset_right = -8.0
+offset_bottom = -36.0
 
 [node name="input" type="TextEdit" parent="commit_message"]
-margin_right = 533.0
-margin_bottom = 187.0
+offset_right = 533.0
+offset_bottom = 187.0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3

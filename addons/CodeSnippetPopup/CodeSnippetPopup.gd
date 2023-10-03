@@ -1,16 +1,16 @@
-tool
+@tool
 extends PopupPanel
 
 
 var INTERFACE : EditorInterface
 var EDITOR : ScriptEditor
 	
-onready var item_list = $MarginContainer/VBoxContainer/ItemList
-onready var filter : LineEdit = $MarginContainer/VBoxContainer/HBoxContainer/Filter
-onready var copy_button : Button = $MarginContainer/VBoxContainer/HBoxContainer/Copy
-onready var edit_button : Button = $MarginContainer/VBoxContainer/HBoxContainer/Edit
-onready var snippet_editor : WindowDialog = $TextEditPopupPanel
-onready var settings_popup : WindowDialog = $SettingsPopup
+@onready var item_list = $MarginContainer/VBoxContainer/ItemList
+@onready var filter : LineEdit = $MarginContainer/VBoxContainer/HBoxContainer/Filter
+@onready var copy_button : Button = $MarginContainer/VBoxContainer/HBoxContainer/Copy
+@onready var edit_button : Button = $MarginContainer/VBoxContainer/HBoxContainer/Edit
+@onready var snippet_editor : Window = $TextEditPopupPanel
+@onready var settings_popup : Window = $SettingsPopup
 # settings vars
 var keyboard_shortcut : String
 var adapt_popup_height : bool
@@ -35,13 +35,13 @@ var drop_down : PopupMenu
 func _ready() -> void:
 	filter.right_icon = get_icon("Search", "EditorIcons")
 	_update_snippets()
-	snippet_editor.connect("snippets_changed", self, "_update_snippets")
+	snippet_editor.connect("snippets_changed", Callable(self, "_update_snippets"))
 	load_cfg()
 
 
 func _unhandled_key_input(event : InputEventKey) -> void:
 	if event.as_text() == keyboard_shortcut and current_main_screen == "Script":
-		if tabstop_numbers.empty():
+		if tabstop_numbers.is_empty():
 			_update_popup_list()
 			popup_centered_clamped(pop_size)
 			filter.grab_focus()
@@ -50,7 +50,7 @@ func _unhandled_key_input(event : InputEventKey) -> void:
 			var code_editor : TextEdit = UTIL.get_current_script_texteditor(EDITOR)
 			_jump_to_and_delete_next_marker(code_editor)
 	
-	if event.is_action_pressed("ui_cancel") and not drop_down.visible and not tabstop_numbers.empty():
+	if event.is_action_pressed("ui_cancel") and not drop_down.visible and not tabstop_numbers.is_empty():
 		tabstop_numbers.clear()
 		placeholder = ""
 
@@ -75,10 +75,10 @@ func _update_popup_list() -> void:
 	
 	# typing " X" at the end of the search_string jumps to the X-th item in the list
 	var quickselect_line = 0
-	var qs_starts_at = search_string.find_last(" ")
+	var qs_starts_at = search_string.rfind(" ")
 	if qs_starts_at != -1:
 		quickselect_line = search_string.substr(qs_starts_at + 1)
-		if quickselect_line.is_valid_integer():
+		if quickselect_line.is_valid_int():
 			search_string.erase(qs_starts_at + 1, quickselect_line.length())
 	
 	search_string = search_string.strip_edges()
@@ -104,7 +104,7 @@ func _update_popup_list() -> void:
 func _paste_code_snippet(snippet_name : String) -> void:
 	var code_editor : TextEdit = UTIL.get_current_script_texteditor(EDITOR)
 	var use_type_hints = INTERFACE.get_editor_settings().get_setting("text_editor/completion/add_type_hints")
-	var tab_count = code_editor.get_line(code_editor.cursor_get_line()).count("\t")
+	var tab_count = code_editor.get_line(code_editor.get_caret_line()).count("\t")
 	var tabs = "\t".repeat(tab_count)
 	
 	current_snippet = code_snippets.get_value(snippet_name, "body") 
@@ -114,7 +114,7 @@ func _paste_code_snippet(snippet_name : String) -> void:
 		current_snippet += code_snippets.get_value(snippet_name, "no_type_hint")
 	current_snippet = current_snippet.replace("\n", "\n" + tabs)
 	
-	starting_pos = [code_editor.cursor_get_line(), code_editor.cursor_get_column()]
+	starting_pos = [code_editor.get_caret_line(), code_editor.get_caret_column()]
 	code_editor.insert_text_at_cursor(current_snippet)
 	
 	tabstop_numbers = _setup_tabstop_numbers()
@@ -141,7 +141,7 @@ func _setup_tabstop_numbers() -> Array:
 
 func _jump_to_and_delete_next_marker(code_editor : TextEdit) -> void:
 	code_editor.deselect() # placeholders
-	yield(get_tree(), "idle_frame") # placeholders
+	await get_tree().idle_frame # placeholders
 	
 	if delayed_one_key_press: # place the mirror vars after the keyboard shortcut was pressed
 		var mirror_var = _get_mirror_var(code_editor)
@@ -157,7 +157,7 @@ func _jump_to_and_delete_next_marker(code_editor : TextEdit) -> void:
 			specific_marker_count -= 1
 		current_snippet = current_snippet.replace(curr_tabstop_marker, mirror_var)
 	
-	if not tabstop_numbers.empty():
+	if not tabstop_numbers.is_empty():
 		var number = tabstop_numbers.pop_front()
 		var result = _custom_search(code_editor, "[@" + number, 1, starting_pos[0], starting_pos[1])
 		if result.size() > 0:
@@ -170,7 +170,7 @@ func _jump_to_and_delete_next_marker(code_editor : TextEdit) -> void:
 				code_editor.insert_text_at_cursor(curr_tabstop_marker)
 				code_editor.select(curr_snippet_pos[0], curr_snippet_pos[1], curr_snippet_pos[0], curr_snippet_pos[1] + curr_tabstop_marker.length())
 				drop_down.code_editor = code_editor
-				drop_down.rect_global_position = _get_cursor_position()
+				drop_down.global_position = _get_cursor_position()
 				drop_down.emit_signal("show_options", placeholder)
 				drop_down.popup()
 				placeholder = ""
@@ -215,9 +215,9 @@ func _adapt_list_height() -> void:
 		var script_icon = get_icon("Script", "EditorIcons")
 		var row_height = script_icon.get_size().y + (8)
 		var rows = max(item_list.get_item_count() / item_list.max_columns, 1) + 1
-		var margin = filter.rect_size.y + $MarginContainer.margin_top + abs($MarginContainer.margin_bottom)
+		var margin = filter.size.y + $MarginContainer.offset_top + abs($MarginContainer.offset_bottom)
 		var height = row_height * rows + margin
-		rect_size.y = clamp(height, 0, 500)
+		size.y = clamp(height, 0, 500)
 
 
 func _on_Filter_text_changed(new_text: String) -> void:
@@ -282,22 +282,22 @@ func _on_Edit_pressed() -> void:
 func _get_cursor_position() -> Vector2: # approx.
 	var code_editor = UTIL.get_current_script_texteditor(EDITOR)
 	var code_font = get_font("source", "EditorFonts") if not INTERFACE.get_editor_settings().get_setting("interface/editor/code_font") else load("interface/editor/code_font")
-	var curr_line = code_editor.get_line(code_editor.get_selection_from_line() if code_editor.get_selection_text() else code_editor.cursor_get_line()).replace("\t", "    ")
-	var line_size = code_font.get_string_size(curr_line.substr(0, curr_line.find("[@")) if code_editor.get_selection_text() else code_editor.get_line(code_editor.cursor_get_line()).substr(0, \
-			code_editor.cursor_get_column()))
+	var curr_line = code_editor.get_line(code_editor.get_selection_from_line() if code_editor.get_selection_text() else code_editor.get_caret_line()).replace("\t", "    ")
+	var line_size = code_font.get_string_size(curr_line.substr(0, curr_line.find("[@")) if code_editor.get_selection_text() else code_editor.get_line(code_editor.get_caret_line()).substr(0, \
+			code_editor.get_caret_column()))
 	
-	var editor_height = code_editor.get_child(1).max_value / code_editor.get_child(1).page * code_editor.rect_size.y
+	var editor_height = code_editor.get_child(1).max_value / code_editor.get_child(1).page * code_editor.size.y
 	var line_height = editor_height / code_editor.get_line_count() if code_editor.get_child(1).visible else line_size.y + 6.5 # else: in case there is no scrollbar 
 	
-	return code_editor.rect_global_position + Vector2(line_size.x + 80, ((code_editor.get_selection_from_line() + 1 if code_editor.get_selection_text() \
-			else code_editor.cursor_get_line()) - code_editor.scroll_vertical) * line_height) # this assumes that scroll_vertical() = first visible line
+	return code_editor.global_position + Vector2(line_size.x + 80, ((code_editor.get_selection_from_line() + 1 if code_editor.get_selection_text() \
+			else code_editor.get_caret_line()) - code_editor.scroll_vertical) * line_height) # this assumes that scroll_vertical() = first visible line
 
 
-func _custom_search(code_editor : TextEdit, search_string : String, flags : int, from_line : int, from_column : int) -> PoolIntArray:
+func _custom_search(code_editor : TextEdit, search_string : String, flags : int, from_line : int, from_column : int) -> PackedInt32Array:
 	var result = code_editor.search(search_string, flags, from_line, from_column)
 	if result and result[TextEdit.SEARCH_RESULT_LINE] < from_line:
 		# EOF reached and search started from the top again
-		return PoolIntArray([])
+		return PackedInt32Array([])
 	return result
 
 
@@ -345,7 +345,7 @@ func load_cfg():
 	
 	elif error == OK:
 		$SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer/LineEdit.text = config.get_value("Settings", "shortcut") as String
-		$SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer2/CheckBox.pressed = config.get_value("Settings", "adaptive_height") as bool
+		$SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer2/CheckBox.button_pressed = config.get_value("Settings", "adaptive_height") as bool
 		$SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer3/SpinBox.value = config.get_value("Settings", "main_h") as int
 		$SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer4/SpinBox2.value = config.get_value("Settings", "main_w") as int
 		$SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer5/SpinBox3.value = config.get_value("Settings", "editor_h") as int
@@ -361,7 +361,7 @@ func load_cfg():
 
 func load_default_settings():
 	$SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer/LineEdit.text = "Control+Tab"
-	$SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer2/CheckBox.pressed = true
+	$SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer2/CheckBox.button_pressed = true
 	$SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer3/SpinBox.value = 500
 	$SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer4/SpinBox2.value = 750
 	$SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer5/SpinBox3.value = 1000

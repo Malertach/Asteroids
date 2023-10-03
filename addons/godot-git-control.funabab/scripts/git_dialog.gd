@@ -15,18 +15,18 @@ func setup(manager, dialog):
 
 func _ready():
 	if _get_cancel_btn_text():
-		var btn = add_cancel(_get_cancel_btn_text());
-		btn.connect("pressed", self, "hide");
+		var btn = add_cancel_button(_get_cancel_btn_text());
+		btn.connect("pressed", Callable(self, "hide"));
 
 	if _get_ok_btn_text():
-		get_ok().text = _get_ok_btn_text();
+		get_ok_button().text = _get_ok_btn_text();
 
 	if _get_custom_btn_text():
 		_custom_btn = add_button(_get_custom_btn_text(), true, CUSTOM_ACTION);
-		connect("custom_action", self, "_on_dialog_confirmed");
+		connect("custom_action", Callable(self, "_on_dialog_confirmed"));
 
-	manager.git.connect("action_event", self, "_action_notification");
-	connect("confirmed", self, "_on_dialog_confirmed");
+	manager.git.connect("action_event", Callable(self, "_action_notification"));
+	connect("confirmed", Callable(self, "_on_dialog_confirmed"));
 	_tr();
 	_on_ready();
 	pass
@@ -62,7 +62,7 @@ func hide():
 
 func _action_notification(what, args):
 	if what == manager.git.action.KILL_ALL_PROCESS:
-		manager.git.disconnect("action_event", self, "_action_notification");
+		manager.git.disconnect("action_event", Callable(self, "_action_notification"));
 		queue_free();
 		return;
 	_on_action_event(what, args);
@@ -81,7 +81,7 @@ func _get_result(custom):
 	pass
 
 func center_dialog():
-	rect_global_position = (manager.git.base_control.get_viewport_rect().size - get_global_rect().size) * .5;
+	global_position = (manager.git.base_control.get_viewport_rect().size - get_global_rect().size) * .5;
 	pass
 
 func show_dialog(args = null):

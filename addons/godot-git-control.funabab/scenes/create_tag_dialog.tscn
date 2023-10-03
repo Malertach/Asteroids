@@ -32,7 +32,7 @@ func _get_result(custom):
 
 func _on_ready():
 	tag_name_input = $container/tag_name/input;
-	tag_name_input.connect(\"text_changed\", self, \"_on_text_changed\");
+	tag_name_input.connect(\"text_changed\", Callable(self, \"_on_text_changed\"));
 	validation();
 	pass
 
@@ -47,7 +47,7 @@ func _on_text_changed(new_text):
 
 func validation():
 	var validate = validate_input();
-	get_ok().disabled = !validate;
+	get_ok_button().disabled = !validate;
 	get_custom_btn().disabled = !validate;
 	pass
 
@@ -57,63 +57,63 @@ func validate_input():
 	pass"
 
 [node name="create_tag_dialog" type="AcceptDialog"]
-margin_right = 527.0
-margin_bottom = 291.0
+offset_right = 527.0
+offset_bottom = 291.0
 window_title = ""
 script = SubResource( 1 )
 
 [node name="container" type="VBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = 8.0
-margin_right = -8.0
-margin_bottom = -36.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -36.0
 
 [node name="tag_name" type="VBoxContainer" parent="container"]
-margin_right = 511.0
-margin_bottom = 42.0
+offset_right = 511.0
+offset_bottom = 42.0
 
 [node name="label" type="Label" parent="container/tag_name"]
-margin_right = 511.0
-margin_bottom = 14.0
+offset_right = 511.0
+offset_bottom = 14.0
 text = "Tag name"
 
 [node name="input" type="LineEdit" parent="container/tag_name"]
-margin_top = 18.0
-margin_right = 511.0
-margin_bottom = 42.0
+offset_top = 18.0
+offset_right = 511.0
+offset_bottom = 42.0
 
 [node name="tag_commit" type="VBoxContainer" parent="container"]
-margin_top = 46.0
-margin_right = 511.0
-margin_bottom = 88.0
+offset_top = 46.0
+offset_right = 511.0
+offset_bottom = 88.0
 
 [node name="label" type="Label" parent="container/tag_commit"]
-margin_right = 511.0
-margin_bottom = 14.0
+offset_right = 511.0
+offset_bottom = 14.0
 text = "Commit ref"
 
 [node name="input" type="LineEdit" parent="container/tag_commit"]
-margin_top = 18.0
-margin_right = 511.0
-margin_bottom = 42.0
+offset_top = 18.0
+offset_right = 511.0
+offset_bottom = 42.0
 placeholder_text = "Optional"
 
 [node name="tag_message" type="VBoxContainer" parent="container"]
-margin_top = 92.0
-margin_right = 511.0
-margin_bottom = 247.0
+offset_top = 92.0
+offset_right = 511.0
+offset_bottom = 247.0
 size_flags_vertical = 3
 
 [node name="label" type="Label" parent="container/tag_message"]
-margin_right = 511.0
-margin_bottom = 14.0
+offset_right = 511.0
+offset_bottom = 14.0
 text = "Tag message"
 
 [node name="input" type="TextEdit" parent="container/tag_message"]
-margin_top = 18.0
-margin_right = 511.0
-margin_bottom = 155.0
+offset_top = 18.0
+offset_right = 511.0
+offset_bottom = 155.0
 mouse_default_cursor_shape = 0
 size_flags_vertical = 3

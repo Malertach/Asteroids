@@ -1,15 +1,15 @@
-tool
+@tool
 extends VBoxContainer
 
 var git;
 signal action_event;
 signal ui_action;
 
-onready var launch_terminal_btn = $main/consoles/command_terminal/container/header/container/options/link_container/launch_terminal_btn;
+@onready var launch_terminal_btn = $main/consoles/command_terminal/container/header/container/options/link_container/launch_terminal_btn;
 
 func setup(git):
 	self.git = git;
-	self.git.connect("action_event", self, "_on_action_event");
+	self.git.connect("action_event", Callable(self, "_on_action_event"));
 	pass
 
 func _on_action_event(what, args):
@@ -29,14 +29,14 @@ func _ready():
 			var icon = IconsManager._get_icon(IconsManager.LOOKUP[btn.name]);
 			if icon:
 				btn.text = icon.code;
-				btn.add_font_override("font", IconsManager._get_font(icon.type));
+				btn.add_theme_font_override("font", IconsManager._get_font(icon.type));
 		else:
 			var text = git.Lang.translate("node_text_" + btn.name);
 			if text:
 				btn.text = text;
-		btn.hint_tooltip = git.Lang.translate("node_tooltip_" + btn.name);
+		btn.tooltip_text = git.Lang.translate("node_tooltip_" + btn.name);
 
-	launch_terminal_btn.connect("pressed", self, "_on_launch_terminal_btn_pressed");
+	launch_terminal_btn.connect("pressed", Callable(self, "_on_launch_terminal_btn_pressed"));
 	pass
 
 func _on_launch_terminal_btn_pressed():

@@ -14,10 +14,10 @@ extends Area2D
 # Example: "MAX_LIVES = 3"
 
 ## exported variables ##
-export (float) var shot_speed = 100.0
+@export (float) var shot_speed = 100.0
 
 ## public variables ##
-var direction :Vector2 = Vector2.ZERO setget set_direction
+var direction :Vector2 = Vector2.ZERO: set = set_direction
 
 ## private variables ##
 # Example: "var _speed = 300.0"
@@ -51,7 +51,7 @@ func set_direction(new_dir: Vector2) -> void:
 # Example: "func _on_state_changed(previous, new):"
 
 
-func _on_VisibilityNotifier2D_viewport_exited(viewport: Viewport) -> void:
+func _on_VisibilityNotifier2D_viewport_exited(viewport: SubViewport) -> void:
 	queue_free()
 
 

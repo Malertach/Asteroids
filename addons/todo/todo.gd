@@ -1,4 +1,4 @@
-tool
+@tool
 extends "res://addons/todo/dock.gd"
 
 const DOCK_NAME = "TODO"
@@ -46,22 +46,22 @@ var menu
 func _init() . (TODODock):
 	pass
 
-func get_plugin_name():
+func _get_plugin_name():
 	return DOCK_NAME
 
-func get_plugin_icon():
+func _get_plugin_icon():
 	return load(get_addon_dir() + "icon.png")
 
 func setup_dock(dock):
 	dock.name = DOCK_NAME
 	
-	get_editor_interface().get_resource_filesystem().connect("filesystem_changed", self, "soft_refresh_todos")
+	get_editor_interface().get_resource_filesystem().connect("filesystem_changed", Callable(self, "soft_refresh_todos"))
 	
 	var search = dock.get_node("Toolbars/Toolbar/Search")
-	search.connect("text_changed", self, "filter_set")
+	search.connect("text_changed", Callable(self, "filter_set"))
 	
 	# NOTE: undocumented? L802 of /editor/scene_tree_dock.cpp
-	search.add_icon_override("right_icon", get_icon("Search", "EditorIcons"))
+	search.add_theme_icon_override("right_icon", get_icon("Search", "EditorIcons"))
 	
 	config = load_config("todo.config.ini")
 	if config.has_section_key("display", "types"):
@@ -99,19 +99,19 @@ func setup_dock(dock):
 	current = menu.get_item_count()
 	menu.add_item("About")
 	menu.set_item_metadata(current, "about")
-	menu.connect("id_pressed", self, "menu_clicked")
+	menu.connect("id_pressed", Callable(self, "menu_clicked"))
 	
-	about = AboutDialog.instance()
-	get_editor_interface().get_editor_viewport().add_child(about)
-	about.get_node("MarginContainer/RichTextLabel").connect("meta_clicked", self, "open_link")
+	about = AboutDialog.instantiate()
+	get_editor_interface().get_editor_main_screen().add_child(about)
+	about.get_node("MarginContainer/RichTextLabel").connect("meta_clicked", Callable(self, "open_link"))
 	
-	dock.get_node("Content/Tree").connect("item_activated", self, "open_item")
+	dock.get_node("Content/Tree").connect("item_activated", Callable(self, "open_item"))
 	
-	connect("main_screen_changed", self, "screen_changed")
-	get_editor_interface().get_script_editor().connect("editor_script_changed", self, "script_changed")
+	connect("main_screen_changed", Callable(self, "screen_changed"))
+	get_editor_interface().get_script_editor().connect("editor_script_changed", Callable(self, "script_changed"))
 	
 	todo_regex = RegEx.new()
-	todo_regex.compile("(?:#|//)\\s*(" + PoolStringArray(TYPES.keys()).join("|") + ")\\s*(\\:)?\\s*([^\\n]+)")
+	todo_regex.compile("(?:#|//)\\s*(" + PackedStringArray(TYPES."|".join(keys())) + ")\\s*(\\:)?\\s*([^\\n]+)")
 	cache = load_config("todo.cache.ini")
 	current_script = get_editor_interface().get_script_editor().get_current_script()
 	
@@ -120,14 +120,14 @@ func setup_dock(dock):
 
 func cleanup_dock(dock):
 	save_config("todo.config.ini", config)
-	get_editor_interface().get_resource_filesystem().disconnect("filesystem_changed", self, "soft_refresh_todos")
-	menu.disconnect("id_pressed", self, "menu_clicked")
-	dock.get_node("Toolbars/Toolbar/Search").disconnect("text_changed", self, "filter_set")
-	dock.get_node("Content/Tree").disconnect("item_activated", self, "open_item")
-	about.get_node("MarginContainer/RichTextLabel").disconnect("meta_clicked", self, "open_link")
-	get_editor_interface().get_editor_viewport().remove_child(about)
-	disconnect("main_screen_changed", self, "screen_changed")
-	get_editor_interface().get_script_editor().disconnect("editor_script_changed", self, "script_changed")
+	get_editor_interface().get_resource_filesystem().disconnect("filesystem_changed", Callable(self, "soft_refresh_todos"))
+	menu.disconnect("id_pressed", Callable(self, "menu_clicked"))
+	dock.get_node("Toolbars/Toolbar/Search").disconnect("text_changed", Callable(self, "filter_set"))
+	dock.get_node("Content/Tree").disconnect("item_activated", Callable(self, "open_item"))
+	about.get_node("MarginContainer/RichTextLabel").disconnect("meta_clicked", Callable(self, "open_link"))
+	get_editor_interface().get_editor_main_screen().remove_child(about)
+	disconnect("main_screen_changed", Callable(self, "screen_changed"))
+	get_editor_interface().get_script_editor().disconnect("editor_script_changed", Callable(self, "script_changed"))
 	
 	save_config("todo.cache.ini", cache)
 
@@ -165,12 +165,12 @@ func scan_file_tree(root, exts = ["gd", "cs", "tscn"]):
 			cache.erase_section(section)
 			changes += 1
 	
-	var dir = Directory.new()
+	var dir = DirAccess.new()
 	
 	if dir.open(root) != OK:
 		return
 	
-	dir.list_dir_begin(true, true)
+	dir.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 	
 	var file = dir.get_next()
 	while file != "":
@@ -201,7 +201,7 @@ func scan_file(target, ext):
 	
 	match ext:
 		"tscn":
-			var scn = ResourceLoader.load(target, "", true).instance()
+			var scn = ResourceLoader.load(target, "", true).instantiate()
 			extract_scene_builtins(scn, sources)
 			scn.free()
 		_:
@@ -428,26 +428,26 @@ func open_item():
 		# referencing tree elements locks them for a frame
 		# making it impossible to clear a tree
 		# which is what we do when we edit resources and open scenes
-		yield(get_tree(), "idle_frame")
+		await get_tree().idle_frame
 		
 		if link.get_extension().to_lower() == "tscn":
 			editor.open_scene_from_path(link)
 			
 			# special treatment for built-in scripts :)
-			yield(get_tree(), "idle_frame")
+			await get_tree().idle_frame
 			
 			if resource:
-				var scn = load(link).instance()
+				var scn = load(link).instantiate()
 				var script = find_builtin_script(scn, resource)
 				editor.edit_resource(script)
-				yield(get_tree(), "idle_frame")
+				await get_tree().idle_frame
 				# NOTE: undocumented, probably meant not to be exposed, but usable :p
 				script_editor._goto_script_line2(line)
 				scn.free()
 		else:
 				var script = load(link)
 				editor.edit_resource(script)
-				yield(get_tree(), "idle_frame")
+				await get_tree().idle_frame
 				script_editor._goto_script_line2(line)
 
 func open_link(link):

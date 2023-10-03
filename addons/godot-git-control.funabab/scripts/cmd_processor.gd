@@ -8,7 +8,7 @@ var kill = false;
 
 func _init(git):
 	self.git = git;
-	self.git.connect("action_event", self, "_on_action_event");
+	self.git.connect("action_event", Callable(self, "_on_action_event"));
 	process = Thread.new();
 	pass
 
@@ -34,9 +34,9 @@ func is_running():
 	return process.is_active();
 
 func process_queue():
-	if (cmd_queue.empty() || is_running() || kill):
+	if (cmd_queue.is_empty() || is_running() || kill):
 		return;
-	process.start(self, "_process_cmd", cmd_queue.front());
+	process.start(Callable(self, "_process_cmd").bind(cmd_queue.front()));
 	pass
 
 func _process_cmd(cmd):

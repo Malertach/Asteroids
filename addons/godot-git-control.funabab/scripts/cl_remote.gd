@@ -11,7 +11,7 @@ var remotes = {
 
 var remote_update_hash = null;
 func _setup():
-	git.connect("cmd_processed", self, "_on_cmd_ok");
+	git.connect("cmd_processed", Callable(self, "_on_cmd_ok"));
 	pass
 
 func clear():
@@ -25,13 +25,13 @@ func update_remotes(cmd_remote_result):
 		return;
 
 	clear();
-	if cmd_remote_result[0][0].empty():
+	if cmd_remote_result[0][0].is_empty():
 		return;
 	var split = cmd_remote_result[0][0].c_escape().split("\\n", false);
 	for val in split:
 		var chunk = val.split("\\t");
 		var remote_name = chunk[0].strip_edges();
-		var pos = chunk[1].find_last(" ");
+		var pos = chunk[1].rfind(" ");
 		var remote_url = chunk[1].substr(0, pos).strip_edges();
 		var remote_type = chunk[1].right(pos).strip_edges();
 

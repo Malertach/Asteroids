@@ -1,6 +1,6 @@
+@tool
 #Resource launcher addon by Nobuyuki
 #For more stuff check out https://github.com/nobuyukinyuu
-tool
 extends EditorPlugin
 
 var b # A class member to hold the widget control during the plugin lifecycle
@@ -12,12 +12,12 @@ var settings = editor_settings.get_setting('editors/external/associations')  #Di
 
 func _enter_tree():
 	#Setup the scene instances.
-	b = preload("res://addons/launchy/launchbutton.tscn").instance()
+	b = preload("res://addons/launchy/launchbutton.tscn").instantiate()
 	c = b.get_node("Config")
 	b.plugin = self 
 	c.editor_settings = editor_settings
 
-	add_control_to_container(CONTAINER_PROPERTY_EDITOR_BOTTOM, b)
+	add_control_to_container(CONTAINER_INSPECTOR_BOTTOM, b)
 	b.visible = false
 
 #Setup config popup.
@@ -27,7 +27,7 @@ func _enter_tree():
 	#We add the config dialog to the scene tree so that we can call it.
 #	interface.get_editor_viewport().add_child(c, true)
 	#Connect popup closing so we can update our handler to the latest associations.
-	c.connect('popup_hide', self, '_on_config_popup_closing')
+	c.connect('popup_hide', Callable(self, '_on_config_popup_closing'))
 
 	#Set basic global settings for our new external editor associations.
 	if editor_settings.get_setting('editors/external/associations') == null:
@@ -43,7 +43,7 @@ func _enter_tree():
 
 
 	
-	if settings.empty() == true:
+	if settings.is_empty() == true:
 		print ("Launchy: External editor associations not yet set.")
 #		print ("Go to Project->Tools->Launchy: Edit Associations to set some editors.\n")
 		c.get_node('./ConfigItems').settings = settings
@@ -70,7 +70,7 @@ func handles(object):
 	return false
 
 #What to do when visibility changes.  Called automatically if handles() returns true.
-func make_visible(visible):
+func _make_visible(visible):
 	if b != null:  
 		b.visible = visible
 		if visible == true:
@@ -101,5 +101,5 @@ func updateHandlerSettings():
 
 func _exit_tree():
 	# Clean-up of the plugin goes here
-	remove_control_from_container(CONTAINER_PROPERTY_EDITOR_BOTTOM, b) 
+	remove_control_from_container(CONTAINER_INSPECTOR_BOTTOM, b) 
 	b = null

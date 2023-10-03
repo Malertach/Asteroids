@@ -4,7 +4,7 @@ var branches = [];
 var branches_update_hash;
 
 func _setup():
-	git.connect("cmd_processed", self, "_on_cmd_ok");
+	git.connect("cmd_processed", Callable(self, "_on_cmd_ok"));
 	pass
 
 #func _on_action_event(what, args):
@@ -55,7 +55,7 @@ func update_branches(cmd_branch_result):
 		return;
 
 	clear();
-	if cmd_branch_result[0][0].empty():
+	if cmd_branch_result[0][0].is_empty():
 		## If git was initalized (an empty repo was created), git by default wont return any branches with [git branch]
 		## Just assume (create) branch master if that occurs
 		self.add_branch("* master");

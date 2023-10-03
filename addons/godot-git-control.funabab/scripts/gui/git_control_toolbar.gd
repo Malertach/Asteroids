@@ -1,4 +1,4 @@
-tool
+@tool
 extends MenuButton
 
 var menu_branches;
@@ -19,7 +19,7 @@ const ITEM_GITIGNORE_MANAGER = 11;
 const ITEM_SETTINGS = 12;
 const ITEM_LAUNCH_TERMINAL = 13;
 
-onready var items_cat = [
+@onready var items_cat = [
 	{
 		ITEM_REFRESH: Lang.translate("item_refresh")
 	},
@@ -64,8 +64,8 @@ func setup(git):
 
 func _ready():
 	var popup = get_popup();
-	popup.connect("id_pressed", self, "_on_item_id_pressed");
-	git.connect("action_event", self, "_on_action_event");
+	popup.connect("id_pressed", Callable(self, "_on_item_id_pressed"));
+	git.connect("action_event", Callable(self, "_on_action_event"));
 	menu_branches = PopupMenu.new();
 	menu_branches.name = "menu_branches";
 
@@ -74,8 +74,8 @@ func _ready():
 	popup.add_child(menu_branches);
 	popup.add_child(menu_delete_branches);
 
-	menu_branches.connect("index_pressed", self, "_on_menu_branches_index_pressed");
-	menu_delete_branches.connect("index_pressed", self, "_on_menu_delete_branches_index_pressed");
+	menu_branches.connect("index_pressed", Callable(self, "_on_menu_branches_index_pressed"));
+	menu_delete_branches.connect("index_pressed", Callable(self, "_on_menu_delete_branches_index_pressed"));
 
 	var size = items_cat.size();
 	for i in size:

@@ -65,7 +65,7 @@ func set_auto_refresh():
 	timer_auto_refresh.wait_time = duration;
 	timer_auto_refresh.one_shot = false;
 	timer_auto_refresh.autostart = false;
-	timer_auto_refresh.connect("timeout", self, "run_auto_refresh");
+	timer_auto_refresh.connect("timeout", Callable(self, "run_auto_refresh"));
 	base_control.add_child(timer_auto_refresh);
 	pass
 
@@ -80,7 +80,7 @@ func set_auto_commit():
 	timer_auto_commit.wait_time = duration;
 	timer_auto_commit.one_shot = false;
 	timer_auto_commit.autostart = false;
-	timer_auto_commit.connect("timeout", self, "run_auto_commit");
+	timer_auto_commit.connect("timeout", Callable(self, "run_auto_commit"));
 	base_control.add_child(timer_auto_commit);
 	pass
 
@@ -224,7 +224,7 @@ func show_dialog(what, args = null):
 	pass
 
 func run_cmd_custom(custom_cmd):
-	if custom_cmd.empty() || (custom_cmd.size() == 1 && custom_cmd[0] == "git"):
+	if custom_cmd.is_empty() || (custom_cmd.size() == 1 && custom_cmd[0] == "git"):
 		return;
 
 	if custom_cmd[0] == "git":
@@ -257,7 +257,7 @@ func run_auto_refresh():
 func run_auto_commit():
 	if cl_workspace.get_all_selected_object_path().size() == 0:
 		return;
-	var d = OS.get_datetime();
+	var d = Time.get_datetime_dict_from_system();
 	var datetime = "%02d/%02d/%d %02d:%02d:%02d" % [d.day, d.month, d.year, d.hour, d.minute, d.second];
 	run_cmd_commit(cl_workspace.get_all_selected_object_path(), Lang.translate("auto_commit_at") % datetime);
 	pass
@@ -372,10 +372,10 @@ func run_cmd_tag(tag_name, tag_commit_ref, tag_message, force = false):
 	var command = ["tag", "-a", tag_name];
 	if (force):
 		command.push_back("--force");
-	if (!tag_message.empty()):
+	if (!tag_message.is_empty()):
 		command.push_back("-m");
 		command.push_back(tag_message);
-	if (!tag_commit_ref.empty()):
+	if (!tag_commit_ref.is_empty()):
 		command.push_back(tag_commit_ref);
 
 	cmd.push_command(command);
@@ -417,7 +417,7 @@ func run_on_cmd_ok(cmd):
 	pass
 
 func set_git_path():
-	if Settings.get("git_path").empty():
+	if Settings.get("git_path").is_empty():
 		var path = find_git_path();
 		if path:
 			print_output(Lang.translate("git_found") % path);
@@ -430,21 +430,21 @@ func find_git_path():
 	match(os):
 		"x11", "osx":
 			var result = CMDProcessor.run_command(["git"], "which");
-			if result.empty():
+			if result.is_empty():
 				return null;
 			result = result[0].c_escape().split("\\n", false);
 			return result[0].strip_edges();
 		"windows":
 			var result = CMDProcessor.run_command(["git"], "where");
-			return null if result.empty() else result[0].strip_edges();
+			return null if result.is_empty() else result[0].strip_edges();
 	pass
 
 func is_git_initialized():
-	return !CMDProcessor.run_git_command(["status"])[0].empty();
+	return !CMDProcessor.run_git_command(["status"])[0].is_empty();
 	pass
 
 func is_git_path_valid():
-	return !CMDProcessor.run_git_command(["help"])[0].empty();
+	return !CMDProcessor.run_git_command(["help"])[0].is_empty();
 	pass
 
 # experimental feature

@@ -1,11 +1,15 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://cxt5t08qfj2nu"]
 
-[ext_resource path="res://scenes/chunk_space_objects.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://scenes/chunk_space_objects.gd" id="1"]
 
 [node name="ChunkySpaceObjects" type="RigidBody2D"]
-script = ExtResource( 1 )
+max_contacts_reported = 5
+contact_monitor = true
+script = ExtResource("1")
+OutLine = Color(0.027451, 0.368627, 0.00784314, 1)
+Polygon = PackedVector2Array()
 
 [node name="Visuals" type="Polygon2D" parent="."]
-color = Color( 0, 0, 0, 1 )
+color = Color(0, 0, 0, 1)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]

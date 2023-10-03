@@ -11,21 +11,21 @@ const VIEW_SETTINGS = 8;
 const VIEW_GITIGNORE = 9;
 
 var views = {
-	VIEW_COMMIT_MSG: preload("res://addons/godot-git-control.funabab/scenes/commit_message_dialog.tscn").instance(),
-	VIEW_CREATE_BRANCH: preload("res://addons/godot-git-control.funabab/scenes/create_branch_dialog.tscn").instance(),
-	VIEW_DELETE_BRANCH: preload("res://addons/godot-git-control.funabab/scenes/delete_branch_dialog.tscn").instance(),
-	VIEW_REVERT_WORKSPACE: preload("res://addons/godot-git-control.funabab/scenes/revert_confirm_dialog.tscn").instance(),
-	VIEW_CREATE_TAG: preload("res://addons/godot-git-control.funabab/scenes/create_tag_dialog.tscn").instance(),
-	VIEW_MERGE_BRANCH: preload("res://addons/godot-git-control.funabab/scenes/merge_branch_dialog.tscn").instance(),
-	VIEW_REBASE: preload("res://addons/godot-git-control.funabab/scenes/rebase_dialog.tscn").instance(),
-	VIEW_SETTINGS: preload("res://addons/godot-git-control.funabab/scenes/settings_dialog.tscn").instance(),
-	VIEW_GITIGNORE: preload("res://addons/godot-git-control.funabab/scenes/gitignore_dialog.tscn").instance()
+	VIEW_COMMIT_MSG: preload("res://addons/godot-git-control.funabab/scenes/commit_message_dialog.tscn").instantiate(),
+	VIEW_CREATE_BRANCH: preload("res://addons/godot-git-control.funabab/scenes/create_branch_dialog.tscn").instantiate(),
+	VIEW_DELETE_BRANCH: preload("res://addons/godot-git-control.funabab/scenes/delete_branch_dialog.tscn").instantiate(),
+	VIEW_REVERT_WORKSPACE: preload("res://addons/godot-git-control.funabab/scenes/revert_confirm_dialog.tscn").instantiate(),
+	VIEW_CREATE_TAG: preload("res://addons/godot-git-control.funabab/scenes/create_tag_dialog.tscn").instantiate(),
+	VIEW_MERGE_BRANCH: preload("res://addons/godot-git-control.funabab/scenes/merge_branch_dialog.tscn").instantiate(),
+	VIEW_REBASE: preload("res://addons/godot-git-control.funabab/scenes/rebase_dialog.tscn").instantiate(),
+	VIEW_SETTINGS: preload("res://addons/godot-git-control.funabab/scenes/settings_dialog.tscn").instantiate(),
+	VIEW_GITIGNORE: preload("res://addons/godot-git-control.funabab/scenes/gitignore_dialog.tscn").instantiate()
 };
 
 var git;
 func _init(git):
 	self.git = git;
-	self.git.connect("action_event", self, "_on_action_event");
+	self.git.connect("action_event", Callable(self, "_on_action_event"));
 
 	for key in views:
 		views[key].setup(self, key);
@@ -55,7 +55,7 @@ func _on_dialog_confirmed(dialog, args = null):
 
 func _on_action_event(what, args):
 	if what == git.action.KILL_ALL_PROCESS:
-		git.disconnect("action_event", self, "_on_action_event");
+		git.disconnect("action_event", Callable(self, "_on_action_event"));
 		call_deferred("free");
 	pass
 

@@ -1,4 +1,4 @@
-tool
+@tool
 
 
 # dclass : "FileSystemDock" || "ImportDock" || "NodeDock" || "SceneTreeDock" || "InspectorDock"; compares names in case of custom docks

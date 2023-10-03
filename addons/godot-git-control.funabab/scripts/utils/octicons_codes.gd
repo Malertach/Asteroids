@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 # octicon v6.0.1
 

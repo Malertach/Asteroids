@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 const GIT_BRANCH = 1;
 const CREATE_BRANCH = 2;

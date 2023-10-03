@@ -1,4 +1,4 @@
-tool
+@tool
 extends Tree
 
 #Default map settings
@@ -10,13 +10,13 @@ var treeItemArgs = []  #Bind for connecting FileDialog to a specific TreeItem.
 
 func _ready():
 	set_column_title(0, "Resource Type")
-	set_column_title(1, "Editor Path")
+	set_column_title(1, "Editor Path3D")
 	set_column_titles_visible(true)
 	create_item()
 
-	connect('item_edited', self, '_on_item_edited')
-	connect('button_pressed', self, '_on_button_pressed')
-	$'../FileDialog'.connect('file_selected', self, '_on_FileDialog_file_selected')
+	connect('item_edited', Callable(self, '_on_item_edited'))
+	connect('button_pressed', Callable(self, '_on_button_pressed'))
+	$'../FileDialog'.connect('file_selected', Callable(self, '_on_FileDialog_file_selected'))
 
 
 #When populating it during a popup with the initial values found in settings.

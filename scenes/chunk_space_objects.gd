@@ -1,4 +1,3 @@
-tool # this is a tool or provides aid during level editing
 class_name ChunkySpaceObject # name of this node in PascalCase
 extends RigidBody2D
 # Collision and visuals
@@ -14,26 +13,22 @@ extends RigidBody2D
 # Example: "MAX_LIVES = 3"
 
 ## exported variables ##
-export (Color) var OutLine = Color(0,0,0) setget set_outline_color
-export (Color) var Fill = Color(0,0,0) setget set_filling_color
-export (float) var LineWidth = 2.0 setget set_width
-export (PoolVector2Array) var Polygon = []
+@export var OutLine: Color = Color(0,0,0): set = set_outline_color
+@export var Fill: Color = Color(0,0,0): set = set_filling_color
+@export var LineWidth: float = 2.0: set = set_width
+@export var Polygon: PackedVector2Array = []
 
 ## public variables ##
-var health = 0 setget set_health
+var health = 0: set = set_health
 var is_alive = true
 
 ## private variables ##
 # Example: "var _speed = 300.0"
 
 ## onready variables ##
-onready var visuals = $Visuals
-onready var collision = $CollisionPolygon2D
+@onready var visuals: Polygon2D = $Visuals
+@onready var collision: CollisionPolygon2D = $CollisionPolygon2D
 
-
-# Called upon creating the object in memory. #
-#func _init():
-#	pass # Replace with function body.
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -48,6 +43,7 @@ func _draw():
 		for i in range(1 , Polygon.size()):
 			draw_line(Polygon[i-1] , Polygon[i], OutLine , LineWidth)
 		draw_line(Polygon[Polygon.size() - 1] , Polygon[0], OutLine , LineWidth)
+		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -55,31 +51,33 @@ func _draw():
 
 
 ## public methods ##
-func property_list_changed_notify():
-	# provide polygon and colors to underlying objects
-	visuals.color = Fill
-	visuals.polygon = Polygon
-	collision.polygon = Polygon
-	_draw()
 
 func set_outline_color(color:Color) -> void:
 	OutLine = color
-	update()
+	if visuals != null:
+		visuals.queue_redraw()
 
 
 func set_filling_color(color:Color) -> void:
 	Fill = color
-	update()
+	if visuals != null:
+		visuals.queue_redraw()
 
 
 func set_width(new_width:float) -> void:
 	LineWidth = new_width
-	update()
+	if visuals != null:
+		visuals.queue_redraw()
 
 
 func set_health(new_health) -> void:
 	health = new_health
 
+func set_polygon(poly: PackedVector2Array) -> void:
+	visuals.polygon = poly
+	collision.polygon = poly
+	if visuals != null:
+		visuals.queue_redraw()
 
 ## private methods ##
 # Example: "func _on_state_changed(previous, new):"

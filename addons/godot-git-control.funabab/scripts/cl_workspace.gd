@@ -16,7 +16,7 @@ var object_identifiers = {
 var objects = [];
 var workspace_update_hash;
 func _setup():
-	git.connect("cmd_processed", self, "_on_cmd_ok");
+	git.connect("cmd_processed", Callable(self, "_on_cmd_ok"));
 	pass
 
 #func _on_action_event(what, args):
@@ -52,7 +52,7 @@ func get_all_selected_object_path():
 func _on_cmd_ok(cmd):
 	if cmd.type == cmd.GIT_STATUS:
 		update_workspace_files(cmd.results);
-		if objects.empty() && cmd.show_cmd_in_terminal: # do this when cmd is not a silent one i.e cmd not shown in console
+		if objects.is_empty() && cmd.show_cmd_in_terminal: # do this when cmd is not a silent one i.e cmd not shown in console
 			git.print_output(git.Lang.translate("workspace_empty"));
 	elif cmd.type == cmd.GIT_CHECKOUT || cmd.type == cmd.GIT_INIT || cmd.type == cmd.GIT_COMMIT:
 		## required in other for re updating of control titles to work properly
@@ -71,8 +71,8 @@ func update_workspace_files(cmd_status_result):
 		return
 
 	clear();
-	if !cmd_status_result[0][0].empty():
-		var dir = Directory.new();
+	if !cmd_status_result[0][0].is_empty():
+		var dir = DirAccess.new();
 		var split = cmd_status_result[0][0].c_escape().split("\\n", false);
 		for val in split:
 			val = val.c_unescape().strip_edges().split(" ", false);

@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 static func string_array_to_string(array, prefix = "", suffix = "", quote_whitespace_spaced_text = false):
 	var result = "";
@@ -109,7 +109,7 @@ static func get_node_type_in_children(node, type):
 				break;
 			i += 1;
 
-		if _history.empty(): break;
+		if _history.is_empty(): break;
 		else:
 			if i == count:
 				var last = _history.back();
@@ -138,7 +138,7 @@ static func node_operation_in_children(node, type, function):
 				break;
 			i += 1;
 
-		if _history.empty(): break;
+		if _history.is_empty(): break;
 		else:
 			if i == count:
 				var last = _history.back();
